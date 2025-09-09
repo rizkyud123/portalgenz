@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Berita - News Portal & Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                borderRadius: {
+                    lg: "var(--radius)",
+                    md: "calc(var(--radius) - 2px)",
+                    sm: "calc(var(--radius) - 4px)",
+                },
+                colors: {
+                    background: "var(--background)",
+                    foreground: "var(--foreground)",
+                    card: {
+                        DEFAULT: "var(--card)",
+                        foreground: "var(--card-foreground)",
+                    },
+                    primary: {
+                        DEFAULT: "var(--primary)",
+                        foreground: "var(--primary-foreground)",
+                    },
+                    secondary: {
+                        DEFAULT: "var(--secondary)",
+                        foreground: "var(--secondary-foreground)",
+                    },
+                    muted: {
+                        DEFAULT: "var(--muted)",
+                        foreground: "var(--muted-foreground)",
+                    },
+                    accent: {
+                        DEFAULT: "var(--accent)",
+                        foreground: "var(--accent-foreground)",
+                    },
+                    destructive: {
+                        DEFAULT: "var(--destructive)",
+                        foreground: "var(--destructive-foreground)",
+                    },
+                    border: "var(--border)",
+                    input: "var(--input)",
+                    ring: "var(--ring)",
+                }
+            }
+        }
+    };
+    </script>
+    <style>
+        :root {
+            --background: hsl(210 40% 98%);
+            --foreground: hsl(222.2 84% 4.9%);
+            --card: hsl(0 0% 100%);
+            --card-foreground: hsl(222.2 84% 4.9%);
+            --primary: hsl(217 91% 50%);
+            --primary-foreground: hsl(210 40% 98%);
+            --secondary: hsl(217 91% 60%);
+            --secondary-foreground: hsl(222.2 47.4% 11.2%);
+            --muted: hsl(210 40% 96%);
+            --muted-foreground: hsl(215.4 16.3% 46.9%);
+            --accent: hsl(210 40% 96%);
+            --accent-foreground: hsl(222.2 47.4% 11.2%);
+            --destructive: hsl(0 84.2% 60.2%);
+            --destructive-foreground: hsl(210 40% 98%);
+            --border: hsl(214.3 31.8% 91.4%);
+            --input: hsl(214.3 31.8% 91.4%);
+            --ring: hsl(217 91% 50%);
+            --radius: 0.5rem;
+        }
+
+        .dark {
+            --background: hsl(222.2 84% 4.9%);
+            --foreground: hsl(210 40% 98%);
+            --card: hsl(222.2 84% 4.9%);
+            --card-foreground: hsl(210 40% 98%);
+            --primary: hsl(217 91% 50%);
+            --primary-foreground: hsl(222.2 47.4% 11.2%);
+            --secondary: hsl(217.2 32.6% 17.5%);
+            --secondary-foreground: hsl(210 40% 98%);
+            --muted: hsl(217.2 32.6% 17.5%);
+            --muted-foreground: hsl(215 20.2% 65.1%);
+            --accent: hsl(217.2 32.6% 17.5%);
+            --accent-foreground: hsl(210 40% 98%);
+            --destructive: hsl(0 62.8% 30.6%);
+            --destructive-foreground: hsl(210 40% 98%);
+            --border: hsl(217.2 32.6% 17.5%);
+            --input: hsl(217.2 32.6% 17.5%);
+            --ring: hsl(217 91% 50%);
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="h-full bg-background font-inter">
+    <div id="app" class="min-h-full">
+        <!-- Navigation Tabs for Demo -->
+        <div class="bg-gray-900 text-white p-4">
+            <div class="max-w-7xl mx-auto">
+                <h1 class="text-xl font-bold mb-4">Portal Berita - Design Mockup</h1>
+                <nav class="flex flex-wrap gap-2">
+                    <button onclick="showPage('homepage')" class="bg-primary px-4 py-2 rounded text-sm font-medium hover:bg-secondary transition" id="tab-homepage">
+                        Homepage
+                    </button>
+                    <button onclick="showPage('article-detail')" class="bg-gray-700 px-4 py-2 rounded text-sm font-medium hover:bg-gray-600 transition" id="tab-article-detail">
+                        Detail Artikel
+                    </button>
+                    <button onclick="showPage('category-page')" class="bg-gray-700 px-4 py-2 rounded text-sm font-medium hover:bg-gray-600 transition" id="tab-category-page">
+                        Halaman Kategori
+                    </button>
+                    <button onclick="showPage('admin-login')" class="bg-gray-700 px-4 py-2 rounded text-sm font-medium hover:bg-gray-600 transition" id="tab-admin-login">
+                        Admin Login
+                    </button>
+                    <button onclick="showPage('admin-dashboard')" class="bg-gray-700 px-4 py-2 rounded text-sm font-medium hover:bg-gray-600 transition" id="tab-admin-dashboard">
+                        Dashboard Admin
+                    </button>
+                    <button onclick="showPage('admin-articles')" class="bg-gray-700 px-4 py-2 rounded text-sm font-medium hover:bg-gray-600 transition" id="tab-admin-articles">
+                        Kelola Berita
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- @COMPONENT: Homepage -->
+        <div id="homepage" class="page-content">
+            <!-- Navbar -->
+            <!-- @COMPONENT: Navbar -->
+            <nav class="bg-white shadow-sm border-b border-border sticky top-0 z-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-center h-16">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <h1 class="text-xl font-bold text-primary">NewsPortal</h1>
+                            </div>
+                            <div class="hidden md:block ml-10">
+                                <div class="flex items-baseline space-x-4">
+                                    <a href="#" class="text-foreground hover:text-primary px-3 py-2 text-sm font-medium">Beranda</a>
+                                    <a href="#" class="text-muted-foreground hover:text-primary px-3 py-2 text-sm font-medium">Politik</a>
+                                    <a href="#" class="text-muted-foreground hover:text-primary px-3 py-2 text-sm font-medium">Ekonomi</a>
+                                    <a href="#" class="text-muted-foreground hover:text-primary px-3 py-2 text-sm font-medium">Teknologi</a>
+                                    <a href="#" class="text-muted-foreground hover:text-primary px-3 py-2 text-sm font-medium">Olahraga</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Search Bar -->
+                        <div class="hidden md:block">
+                            <div class="relative">
+                                <input type="text" placeholder="Cari berita..." class="bg-muted border border-border rounded-md pl-10 pr-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-search text-muted-foreground"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mobile menu button -->
+                        <div class="md:hidden">
+                            <button type="button" class="text-muted-foreground hover:text-foreground p-2">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <!-- @END_COMPONENT: Navbar -->
+
+            <!-- Hero Section -->
+            <!-- @COMPONENT: HeroSection -->
+            <section class="bg-gradient-to-r from-primary to-secondary">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        <div class="text-white">
+                            <h2 class="text-3xl md:text-4xl font-bold mb-4" data-bind="featuredArticle.title">
+                                Perkembangan Terkini Teknologi AI di Indonesia Tahun 2024
+                            </h2>
+                            <p class="text-lg mb-6 text-primary-foreground/90" data-bind="featuredArticle.excerpt">
+                                Mengenal lebih dalam bagaimana perkembangan artificial intelligence mengubah lanskap teknologi di Indonesia dan dampaknya terhadap berbagai sektor industri.
+                            </p>
+                            <div class="flex items-center space-x-4 mb-6">
+                                <span class="bg-white/20 px-3 py-1 rounded-full text-sm" data-bind="featuredArticle.category">Teknologi</span>
+                                <span class="text-sm" data-bind="featuredArticle.publishedAt">15 Januari 2024</span>
+                            </div>
+                            <button class="bg-white text-primary px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition" data-event="click:navigateToArticle">
+                                Baca Selengkapnya
+                            </button>
+                        </div>
+                        <div class="hidden lg:block">
+                            <!-- Modern workspace with AI technology setup -->
+                            <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=500" 
+                                 alt="AI Technology Workspace" 
+                                 class="rounded-xl shadow-2xl w-full h-auto" 
+                                 data-mock-image="true" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- @END_COMPONENT: HeroSection -->
+
+            <!-- Latest News Section -->
+            <!-- @COMPONENT: LatestNews -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-2xl font-bold text-foreground">Berita Terbaru</h2>
+                    <div class="flex space-x-2">
+                        <button class="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium">Semua</button>
+                        <button class="px-4 py-2 bg-muted text-muted-foreground rounded-md text-sm font-medium hover:bg-accent">Politik</button>
+                        <button class="px-4 py-2 bg-muted text-muted-foreground rounded-md text-sm font-medium hover:bg-accent">Ekonomi</button>
+                        <button class="px-4 py-2 bg-muted text-muted-foreground rounded-md text-sm font-medium hover:bg-accent">Teknologi</button>
+                    </div>
+                </div>
+
+                <!-- @MAP: articles.map(article => ( -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Article Card 1 -->
+                    <article class="bg-card rounded-xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-shadow" data-mock="true">
+                        <div class="aspect-video overflow-hidden">
+                            <!-- Indonesian parliament building during session -->
+                            <img src="https://pixabay.com/get/g4d2f4e2e213b9efd3fefff4fccf02be2f7f0972ca9941a296306667c4e0d6123262834c7c7b39dc044322898abeeb5563122f653749956e6f6a71c364d10cfa1_1280.jpg" 
+                                 alt="Indonesian Parliament Building" 
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center space-x-2 mb-3">
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium" data-bind="article.category">Politik</span>
+                                <span class="text-xs text-muted-foreground" data-bind="article.publishedAt">2 jam yang lalu</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2 text-card-foreground line-clamp-2" data-bind="article.title">
+                                DPR Bahas RUU Baru Tentang Perlindungan Data Pribadi
+                            </h3>
+                            <p class="text-muted-foreground text-sm mb-4 line-clamp-3" data-bind="article.excerpt">
+                                Pembahasan RUU Perlindungan Data Pribadi memasuki tahap akhir dengan berbagai masukan dari stakeholder terkait implementasi dan sanksi pelanggaran.
+                            </p>
+                            <button class="text-primary text-sm font-medium hover:underline" data-event="click:navigateToArticle">
+                                Baca Selengkapnya →
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Article Card 2 -->
+                    <article class="bg-card rounded-xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-shadow" data-mock="true">
+                        <div class="aspect-video overflow-hidden">
+                            <!-- Indonesian rupiah currency and financial charts -->
+                            <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=450" 
+                                 alt="Indonesian Financial Market" 
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center space-x-2 mb-3">
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-medium" data-bind="article.category">Ekonomi</span>
+                                <span class="text-xs text-muted-foreground" data-bind="article.publishedAt">5 jam yang lalu</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2 text-card-foreground line-clamp-2" data-bind="article.title">
+                                Rupiah Menguat Terhadap Dollar AS di Awal Tahun 2024
+                            </h3>
+                            <p class="text-muted-foreground text-sm mb-4 line-clamp-3" data-bind="article.excerpt">
+                                Nilai tukar rupiah terhadap dollar AS menunjukkan penguatan signifikan di awal tahun 2024 didukung oleh optimisme investor asing.
+                            </p>
+                            <button class="text-primary text-sm font-medium hover:underline" data-event="click:navigateToArticle">
+                                Baca Selengkapnya →
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Article Card 3 -->
+                    <article class="bg-card rounded-xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-shadow" data-mock="true">
+                        <div class="aspect-video overflow-hidden">
+                            <!-- Soccer stadium with Indonesian fans -->
+                            <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=450" 
+                                 alt="Football Stadium with Fans" 
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center space-x-2 mb-3">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-medium" data-bind="article.category">Olahraga</span>
+                                <span class="text-xs text-muted-foreground" data-bind="article.publishedAt">8 jam yang lalu</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2 text-card-foreground line-clamp-2" data-bind="article.title">
+                                Timnas Indonesia Lolos ke Semifinal Piala AFF 2024
+                            </h3>
+                            <p class="text-muted-foreground text-sm mb-4 line-clamp-3" data-bind="article.excerpt">
+                                Dengan kemenangan 2-1 atas Thailand, Timnas Indonesia berhasil mengamankan posisi di semifinal Piala AFF 2024 dan akan menghadapi Vietnam.
+                            </p>
+                            <button class="text-primary text-sm font-medium hover:underline" data-event="click:navigateToArticle">
+                                Baca Selengkapnya →
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Article Card 4 -->
+                    <article class="bg-card rounded-xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-shadow" data-mock="true">
+                        <div class="aspect-video overflow-hidden">
+                            <!-- Indonesian startup office environment -->
+                            <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=450" 
+                                 alt="Modern Startup Office" 
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center space-x-2 mb-3">
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-medium" data-bind="article.category">Teknologi</span>
+                                <span class="text-xs text-muted-foreground" data-bind="article.publishedAt">1 hari yang lalu</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2 text-card-foreground line-clamp-2" data-bind="article.title">
+                                Startup Indonesia Raih Pendanaan Seri A $50 Juta
+                            </h3>
+                            <p class="text-muted-foreground text-sm mb-4 line-clamp-3" data-bind="article.excerpt">
+                                Sebuah startup fintech asal Jakarta berhasil meraih pendanaan Seri A sebesar $50 juta untuk ekspansi ke Asia Tenggara.
+                            </p>
+                            <button class="text-primary text-sm font-medium hover:underline" data-event="click:navigateToArticle">
+                                Baca Selengkapnya →
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Article Card 5 -->
+                    <article class="bg-card rounded-xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-shadow" data-mock="true">
+                        <div class="aspect-video overflow-hidden">
+                            <!-- Traditional Indonesian culture ceremony -->
+                            <img src="https://pixabay.com/get/gabd549a044a7d86618b6cbab0e37d1101972f9e45ef3f1dd90a2993b58ff699a524da86c22501a94df14ff24e9a233b7c3f65d6c314daf1810f912e6aa6f1911_1280.jpg" 
+                                 alt="Indonesian Cultural Ceremony" 
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center space-x-2 mb-3">
+                                <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-medium" data-bind="article.category">Budaya</span>
+                                <span class="text-xs text-muted-foreground" data-bind="article.publishedAt">1 hari yang lalu</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2 text-card-foreground line-clamp-2" data-bind="article.title">
+                                Festival Budaya Nusantara 2024 Digelar di Jakarta
+                            </h3>
+                            <p class="text-muted-foreground text-sm mb-4 line-clamp-3" data-bind="article.excerpt">
+                                Acara tahunan yang menampilkan kekayaan budaya dari 34 provinsi di Indonesia akan berlangsung selama satu minggu penuh.
+                            </p>
+                            <button class="text-primary text-sm font-medium hover:underline" data-event="click:navigateToArticle">
+                                Baca Selengkapnya →
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Article Card 6 -->
+                    <article class="bg-card rounded-xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-shadow" data-mock="true">
+                        <div class="aspect-video overflow-hidden">
+                            <!-- Indonesian healthcare workers and medical facility -->
+                            <img src="https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=450" 
+                                 alt="Healthcare Workers in Medical Facility" 
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center space-x-2 mb-3">
+                                <span class="bg-teal-100 text-teal-800 px-2 py-1 rounded text-xs font-medium" data-bind="article.category">Kesehatan</span>
+                                <span class="text-xs text-muted-foreground" data-bind="article.publishedAt">2 hari yang lalu</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2 text-card-foreground line-clamp-2" data-bind="article.title">
+                                Program Vaksinasi Nasional Capai Target 80% Populasi
+                            </h3>
+                            <p class="text-muted-foreground text-sm mb-4 line-clamp-3" data-bind="article.excerpt">
+                                Pemerintah mengumumkan pencapaian target vaksinasi nasional sebesar 80% dari total populasi Indonesia per akhir 2023.
+                            </p>
+                            <button class="text-primary text-sm font-medium hover:underline" data-event="click:navigateToArticle">
+                                Baca Selengkapnya →
+                            </button>
+                        </div>
+                    </article>
+                </div>
+                <!-- @END_MAP )) -->
+
+                <!-- Pagination -->
+                <div class="flex justify-center">
+                    <nav class="flex items-center space-x-2">
+                        <button class="px-3 py-2 bg-muted text-muted-foreground rounded-md text-sm hover:bg-accent" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="px-3 py-2 bg-primary text-primary-foreground rounded-md text-sm">1</button>
+                        <button class="px-3 py-2 bg-muted text-muted-foreground rounded-md text-sm hover:bg-accent">2</button>
+                        <button class="px-3 py-2 bg-muted text-muted-foreground rounded-md text-sm hover:bg-accent">3</button>
+                        <button class="px-3 py-2 bg-muted text-muted-foreground rounded-md text-sm hover:bg-accent">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </nav>
+                </div>
+            </section>
+            <!-- @END_COMPONENT: LatestNews -->
+
+            <!-- Footer -->
+            <!-- @COMPONENT: Footer -->
+            <footer class="bg-gray-900 text-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                        <div class="col-span-1 md:col-span-2">
+                            <h3 class="text-xl font-bold mb-4">NewsPortal</h3>
+                            <p class="text-gray-300 mb-4">
+                                Portal berita terpercaya yang menyajikan informasi terkini dari berbagai bidang dengan akurat dan terpercaya.
+                            </p>
+                            <div class="flex space-x-4">
+                                <a href="#" class="text-gray-300 hover:text-white transition">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="text-gray-300 hover:text-white transition">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="text-gray-300 hover:text-white transition">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="text-gray-300 hover:text-white transition">
+                                    <i class="fab fa-youtube"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-4">Kategori</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li><a href="#" class="text-gray-300 hover:text-white transition">Politik</a></li>
+                                <li><a href="#" class="text-gray-300 hover:text-white transition">Ekonomi</a></li>
+                                <li><a href="#" class="text-gray-300 hover:text-white transition">Teknologi</a></li>
+                                <li><a href="#" class="text-gray-300 hover:text-white transition">Olahraga</a></li>
+                                <li><a href="#" class="text-gray-300 hover:text-white transition">Budaya</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-4">Tentang</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li><a href="#" class="text-gray-300 hover:text-white transition">Tentang Kami</a></li>
+                                <li><a href="#" class="text-gray-300 hover:text-white transition">Kontak</a></li>
+                                <li><a href="#" class="text-gray-300 hover:text-white transition">Privacy Policy</a></li>
+                                <li><a href="#" class="text-gray-300 hover:text-white transition">Terms of Service</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="border-t border-gray-700 mt-8 pt-8 text-center text-sm text-gray-300">
+                        <p>&copy; 2024 NewsPortal. All rights reserved.</p>
+                    </div>
+                </div>
+            </footer>
+            <!-- @END_COMPONENT: Footer -->
+        </div>
+        <!-- @END_COMPONENT: Homepage -->
+
+        <!-- @COMPONENT: ArticleDetail -->
+        <div id="article-detail" class="page-content hidden">
+            <!-- Navbar (Same as homepage) -->
+            <nav class="bg-white shadow-sm border-b border-border sticky top-0 z-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-center h-16">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <h1 class="text-xl font-bold text-primary">NewsPortal</h1>
+                            </div>
+                            <div class="hidden md:block ml-10">
+                                <div class="flex items-baseline space-x-4">
+                                    <a href="#" class="text-muted-foreground hover:text-primary px-3 py-2 text-sm font-medium">Beranda</a>
+                                    <a href="#" class="text-muted-foreground hover:text-primary px-3 py-2 text-sm font-medium">Politik</a>
+                                    <a href="#" class="text-muted-foreground hover:text-primary px-3 py-2 text-sm font-medium">Ekonomi</a>
+                                    <a href="#" class="text-muted-foreground hover:text-primary px-3 py-2 text-sm font-medium">Teknologi</a>
+                                    <a href="#" class="text-muted-foreground hover:text-primary px-3 py-2 text-sm font-medium">Olahraga</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="hidden md:block">
+                            <div class="relative">
+                                <input type="text" placeholder="Cari berita..." class="bg-muted border border-border rounded-md pl-10 pr-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-search text-muted-foreground"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="md:hidden">
+                            <button type="button" class="text-muted-foreground hover:text-foreground p-2">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Article Content -->
+            <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <!-- Breadcrumb -->
+                <nav class="flex mb-6 text-sm">
+                    <a href="#" class="text-primary hover:underline">Beranda</a>
+                    <span class="mx-2 text-muted-foreground">/</span>
+                    <a href="#" class="text-primary hover:underline" data-bind="article.category">Teknologi</a>
+                    <span class="mx-2 text-muted-foreground">/</span>
+                    <span class="text-muted-foreground">Article</span>
+                </nav>
+
+                <!-- Article Header -->
+                <header class="mb-8">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium" data-bind="article.category">Teknologi</span>
+                        <span class="text-sm text-muted-foreground" data-bind="article.publishedAt">15 Januari 2024, 14:30 WIB</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-foreground mb-4" data-bind="article.title">
+                        Perkembangan Terkini Teknologi AI di Indonesia Tahun 2024: Revolusi Digital yang Mengubah Berbagai Sektor
+                    </h1>
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-medium">
+                                JD
+                            </div>
+                            <div>
+                                <p class="font-medium text-sm" data-bind="article.author.name">John Doe</p>
+                                <p class="text-xs text-muted-foreground">Senior Editor</p>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Featured Image -->
+                <div class="mb-8">
+                    <!-- Modern AI and machine learning technology visualization -->
+                    <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&h=600" 
+                         alt="AI Technology Visualization" 
+                         class="w-full h-auto rounded-xl shadow-lg" 
+                         data-bind="article.featuredImage" />
+                    <p class="text-sm text-muted-foreground mt-2 text-center">Ilustrasi perkembangan teknologi AI di Indonesia (Foto: Unsplash)</p>
+                </div>
+
+                <!-- Social Share -->
+                <div class="flex items-center justify-between border-y border-border py-4 mb-8">
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm font-medium">Bagikan:</span>
+                        <button class="flex items-center space-x-2 px-3 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition">
+                            <i class="fab fa-facebook-f"></i>
+                            <span>Facebook</span>
+                        </button>
+                        <button class="flex items-center space-x-2 px-3 py-2 bg-sky-500 text-white rounded text-sm hover:bg-sky-600 transition">
+                            <i class="fab fa-twitter"></i>
+                            <span>Twitter</span>
+                        </button>
+                        <button class="flex items-center space-x-2 px-3 py-2 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>WhatsApp</span>
+                        </button>
+                    </div>
+                    <button class="flex items-center space-x-2 text-muted-foreground hover:text-foreground">
+                        <i class="fas fa-bookmark"></i>
+                        <span class="text-sm">Simpan</span>
+                    </button>
+                </div>
+
+                <!-- Article Body -->
+                <div class="prose prose-lg max-w-none" data-bind="article.content">
+                    <p class="text-lg text-muted-foreground mb-6 leading-relaxed">
+                        Indonesia mengalami perkembangan pesat dalam adopsi teknologi Artificial Intelligence (AI) di berbagai sektor. Dari healthcare hingga finansial, teknologi AI mulai mengubah cara kerja dan efisiensi dalam berbagai industri di tanah air.
+                    </p>
+
+                    <h2 class="text-2xl font-bold text-foreground mt-8 mb-4">Transformasi Digital di Sektor Kesehatan</h2>
+                    <p class="mb-6 leading-relaxed">
+                        Sektor kesehatan menjadi salah satu pionir dalam penerapan teknologi AI di Indonesia. Beberapa rumah sakit besar di Jakarta dan Surabaya telah mengimplementasikan sistem diagnostic berbasis AI yang mampu mendeteksi penyakit dengan akurasi tinggi.
+                    </p>
+
+                    <blockquote class="border-l-4 border-primary pl-6 my-6 italic text-lg">
+                        "Teknologi AI telah membantu kami meningkatkan akurasi diagnosis hingga 95% dan mengurangi waktu pemeriksaan pasien secara signifikan."
+                        <footer class="text-sm text-muted-foreground mt-2">- Dr. Sarah Wilson, Direktur RS Teknologi Jakarta</footer>
+                    </blockquote>
+
+                    <h2 class="text-2xl font-bold text-foreground mt-8 mb-4">Revolusi Finansial dengan AI</h2>
+                    <p class="mb-6 leading-relaxed">
+                        Industri perbankan dan fintech di Indonesia juga tidak ketinggalan dalam mengadopsi teknologi AI. Sistem deteksi fraud, credit scoring otomatis, dan chatbot customer service berbasis AI menjadi standar baru dalam pelayanan finansial.
+                    </p>
+
+                    <ul class="list-disc pl-6 mb-6 space-y-2">
+                        <li>Peningkatan efisiensi operasional hingga 60%</li>
+                        <li>Penurunan tingkat fraud sebesar 45%</li>
+                        <li>Response time customer service 10x lebih cepat</li>
+                        <li>Akurasi credit scoring meningkat 30%</li>
+                    </ul>
+
+                    <h2 class="text-2xl font-bold text-foreground mt-8 mb-4">Tantangan dan Peluang ke Depan</h2>
+                    <p class="mb-6 leading-relaxed">
+                        Meskipun perkembangan AI di Indonesia menunjukkan tren positif, masih terdapat beberapa tantangan yang perlu diatasi, termasuk regulasi yang belum komprehensif, kebutuhan talent yang tinggi, dan infrastruktur teknologi yang perlu diperkuat.
+                    </p>
+
+                    <p class="mb-6 leading-relaxed">
+                        Pemerintah Indonesia telah menetapkan roadmap AI nasional yang menargetkan Indonesia menjadi salah satu pemain utama AI di Asia Tenggara pada tahun 2030. Investasi dalam penelitian dan pengembangan AI diharapkan mencapai $5 miliar dalam 5 tahun ke depan.
+                    </p>
+                </div>
+
+                <!-- Tags -->
+                <div class="border-t border-border pt-6 mt-8">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="text-sm font-medium">Tags:</span>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-muted px-3 py-1 rounded-full text-xs" data-mock="true">AI</span>
+                            <span class="bg-muted px-3 py-1 rounded-full text-xs" data-mock="true">Teknologi</span>
+                            <span class="bg-muted px-3 py-1 rounded-full text-xs" data-mock="true">Indonesia</span>
+                            <span class="bg-muted px-3 py-1 rounded-full text-xs" data-mock="true">Digital</span>
+                            <span class="bg-muted px-3 py-1 rounded-full text-xs" data-mock="true">Innovation</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Related Articles -->
+            <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 border-t border-border">
+                <h2 class="text-2xl font-bold text-foreground mb-6">Berita Terkait</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Related Article 1 -->
+                    <article class="bg-card rounded-xl border border-border p-6" data-mock="true">
+                        <div class="aspect-video mb-4 overflow-hidden rounded-lg">
+                            <!-- Indonesian tech startup workspace -->
+                            <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=300" 
+                                 alt="Tech Startup Workspace" 
+                                 class="w-full h-full object-cover" />
+                        </div>
+                        <h3 class="font-semibold text-lg mb-2 text-card-foreground">Startup Teknologi Indonesia Raih Investasi $100 Juta</h3>
+                        <p class="text-sm text-muted-foreground mb-3">2 hari yang lalu</p>
+                        <p class="text-muted-foreground text-sm">Tiga startup teknologi asal Indonesia berhasil meraih total investasi $100 juta untuk pengembangan produk AI...</p>
+                    </article>
+
+                    <!-- Related Article 2 -->
+                    <article class="bg-card rounded-xl border border-border p-6" data-mock="true">
+                        <div class="aspect-video mb-4 overflow-hidden rounded-lg">
+                            <!-- Digital transformation in Indonesian education -->
+                            <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=300" 
+                                 alt="Digital Education Technology" 
+                                 class="w-full h-full object-cover" />
+                        </div>
+                        <h3 class="font-semibold text-lg mb-2 text-card-foreground">Pendidikan Digital Mengubah Metode Pembelajaran di Indonesia</h3>
+                        <p class="text-sm text-muted-foreground mb-3">3 hari yang lalu</p>
+                        <p class="text-muted-foreground text-sm">Platform pembelajaran online berbasis AI mulai diadopsi secara masif oleh institusi pendidikan di Indonesia...</p>
+                    </article>
+                </div>
+            </section>
+        </div>
+        <!-- @END_COMPONENT: ArticleDetail -->
+
+        <!-- @COMPONENT: CategoryPage -->
+        <div id="category-page" class="page-content hidden">
+            <!-- Navbar (Same as homepage) -->
+            <nav class="bg-white shadow-sm border-b border-border sticky top-0 z-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-between items-center h-16">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <h1 class="text-xl font-bold text-primary">NewsPortal</h1>
+                            </div>
+                            <div class="hidden md:block ml-10">
+                                <div class="flex items-baseline space-x-4">
+                                    <a href="#" class="text-muted-foreground hover:text-primary px-3 py-2 text-sm font-medium">Beranda</a>
+                                    <a href="#" class="text-primary px-3 py-2 text-sm font-medium">Politik</a>
+                                    <a href="#" class="text-muted-foreground hover:text-primary px-3 py-2 text-sm font-medium">Ekonomi</a>
+                                    <a href="#" class="text-muted-foreground hover:text-primary px-3 py-2 text-sm font-medium">Teknologi</a>
+                                    <a href="#" class="text-muted-foreground hover:text-primary px-3 py-2 text-sm font-medium">Olahraga</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="hidden md:block">
+                            <div class="relative">
+                                <input type="text" placeholder="Cari berita..." class="bg-muted border border-border rounded-md pl-10 pr-4 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-search text-muted-foreground"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="md:hidden">
+                            <button type="button" class="text-muted-foreground hover:text-foreground p-2">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Category Header -->
+            <section class="bg-gradient-to-r from-red-600 to-red-700 text-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                    <div class="max-w-3xl">
+                        <h1 class="text-3xl md:text-4xl font-bold mb-4" data-bind="category.name">Berita Politik</h1>
+                        <p class="text-lg text-red-100 mb-6">
+                            Temukan berita politik terkini, analisis mendalam, dan update terbaru dari dunia politik Indonesia dan internasional.
+                        </p>
+                        <div class="flex items-center space-x-4 text-sm">
+                            <span class="bg-white/20 px-3 py-1 rounded-full" data-bind="category.articleCount">127 Artikel</span>
+                            <span>Terakhir diperbarui: 2 jam yang lalu</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Category Filters -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 border-b border-border">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div class="flex items-center space-x-4">
+                        <label class="text-sm font-medium">Urutkan:</label>
+                        <select class="border border-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
+                            <option>Terbaru</option>
+                            <option>Terpopuler</option>
+                            <option>Terlama</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <label class="text-sm font-medium">Tampilan:</label>
+                        <button class="p-2 bg-primary text-primary-foreground rounded">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                        <button class="p-2 bg-muted text-muted-foreground rounded hover:bg-accent">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Articles Grid -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <!-- @MAP: categoryArticles.map(article => ( -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Politics Article 1 -->
+                    <article class="bg-card rounded-xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-shadow" data-mock="true">
+                        <div class="aspect-video overflow-hidden">
+                            <!-- Indonesian government building and officials -->
+                            <img src="https://pixabay.com/get/gdeacf873d8e442bbe21116ab8b658d5de073ad1536abc4c2c462eda74a82fbc64746944ed48b55e40369a2b57336ebf7bd7bb84e1069f5a1c9ce7a8981e2970b_1280.jpg" 
+                                 alt="Indonesian Government Building" 
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">Politik</span>
+                                <span class="text-xs text-muted-foreground">1 jam yang lalu</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2 text-card-foreground line-clamp-2">
+                                Presiden Jokowi Resmikan Program Bantuan Sosial Terbaru
+                            </h3>
+                            <p class="text-muted-foreground text-sm mb-4 line-clamp-3">
+                                Program bantuan sosial senilai Rp 50 triliun diluncurkan untuk mendukung masyarakat terdampak ekonomi global yang tidak stabil...
+                            </p>
+                            <button class="text-primary text-sm font-medium hover:underline">
+                                Baca Selengkapnya →
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Politics Article 2 -->
+                    <article class="bg-card rounded-xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-shadow" data-mock="true">
+                        <div class="aspect-video overflow-hidden">
+                            <!-- Indonesian parliament session -->
+                            <img src="https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=450" 
+                                 alt="Parliament Session" 
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">Politik</span>
+                                <span class="text-xs text-muted-foreground">3 jam yang lalu</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2 text-card-foreground line-clamp-2">
+                                DPR Setujui Anggaran Pembangunan Infrastruktur 2024
+                            </h3>
+                            <p class="text-muted-foreground text-sm mb-4 line-clamp-3">
+                                Anggaran sebesar Rp 120 triliun untuk pembangunan infrastruktur di seluruh Indonesia tahun 2024 mendapat persetujuan DPR...
+                            </p>
+                            <button class="text-primary text-sm font-medium hover:underline">
+                                Baca Selengkapnya →
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Politics Article 3 -->
+                    <article class="bg-card rounded-xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-shadow" data-mock="true">
+                        <div class="aspect-video overflow-hidden">
+                            <!-- Political debate or discussion -->
+                            <img src="https://images.unsplash.com/photo-1541872705-1f73c6400ec9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=450" 
+                                 alt="Political Discussion" 
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">Politik</span>
+                                <span class="text-xs text-muted-foreground">5 jam yang lalu</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2 text-card-foreground line-clamp-2">
+                                Koalisi Partai Politik Diskusikan Strategi Pemilu 2024
+                            </h3>
+                            <p class="text-muted-foreground text-sm mb-4 line-clamp-3">
+                                Beberapa partai politik menggelar pertemuan tertutup untuk membahas strategi koalisi menjelang pemilihan umum tahun 2024...
+                            </p>
+                            <button class="text-primary text-sm font-medium hover:underline">
+                                Baca Selengkapnya →
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Politics Article 4 -->
+                    <article class="bg-card rounded-xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-shadow" data-mock="true">
+                        <div class="aspect-video overflow-hidden">
+                            <!-- Indonesian flag and government ceremony -->
+                            <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=450" 
+                                 alt="Indonesian Flag Ceremony" 
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">Politik</span>
+                                <span class="text-xs text-muted-foreground">8 jam yang lalu</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2 text-card-foreground line-clamp-2">
+                                Menteri Dalam Negeri Lantik 15 Gubernur Baru
+                            </h3>
+                            <p class="text-muted-foreground text-sm mb-4 line-clamp-3">
+                                Upacara pelantikan 15 gubernur baru dilaksanakan di Istana Negara dengan protokol kesehatan yang ketat...
+                            </p>
+                            <button class="text-primary text-sm font-medium hover:underline">
+                                Baca Selengkapnya →
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Politics Article 5 -->
+                    <article class="bg-card rounded-xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-shadow" data-mock="true">
+                        <div class="aspect-video overflow-hidden">
+                            <!-- International diplomatic meeting -->
+                            <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=450" 
+                                 alt="Diplomatic Meeting" 
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">Politik</span>
+                                <span class="text-xs text-muted-foreground">1 hari yang lalu</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2 text-card-foreground line-clamp-2">
+                                Indonesia Tuan Rumah KTT ASEAN 2024
+                            </h3>
+                            <p class="text-muted-foreground text-sm mb-4 line-clamp-3">
+                                Persiapan KTT ASEAN 2024 yang akan diselenggarakan di Jakarta memasuki tahap final dengan agenda pembahasan kerja sama regional...
+                            </p>
+                            <button class="text-primary text-sm font-medium hover:underline">
+                                Baca Selengkapnya →
+                            </button>
+                        </div>
+                    </article>
+
+                    <!-- Politics Article 6 -->
+                    <article class="bg-card rounded-xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-shadow" data-mock="true">
+                        <div class="aspect-video overflow-hidden">
+                            <!-- Local government meeting -->
+                            <img src="https://pixabay.com/get/gb0fc3e4cd9810b4173ae1397c0a6c290dad8baaacc706d0342b235887810d6a0fc971dfa053b5146ae8582b7ab379eba23ca0609d7644f5f4eda4c1573a6fcee_1280.jpg" 
+                                 alt="Local Government Meeting" 
+                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                        </div>
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-medium">Politik</span>
+                                <span class="text-xs text-muted-foreground">1 hari yang lalu</span>
+                            </div>
+                            <h3 class="font-semibold text-lg mb-2 text-card-foreground line-clamp-2">
+                                Pemda Se-Jawa Sepakat Sinkronisasi Program Pembangunan
+                            </h3>
+                            <p class="text-muted-foreground text-sm mb-4 line-clamp-3">
+                                Rapat koordinasi pemerintah daerah se-Pulau Jawa menghasilkan kesepakatan untuk sinkronisasi program pembangunan lintas wilayah...
+                            </p>
+                            <button class="text-primary text-sm font-medium hover:underline">
+                                Baca Selengkapnya →
+                            </button>
+                        </div>
+                    </article>
+                </div>
+                <!-- @END_MAP )) -->
+
+                <!-- Pagination -->
+                <div class="flex justify-center">
+                    <nav class="flex items-center space-x-2">
+                        <button class="px-3 py-2 bg-muted text-muted-foreground rounded-md text-sm hover:bg-accent" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="px-3 py-2 bg-primary text-primary-foreground rounded-md text-sm">1</button>
+                        <button class="px-3 py-2 bg-muted text-muted-foreground rounded-md text-sm hover:bg-accent">2</button>
+                        <button class="px-3 py-2 bg-muted text-muted-foreground rounded-md text-sm hover:bg-accent">3</button>
+                        <button class="px-3 py-2 bg-muted text-muted-foreground rounded-md text-sm hover:bg-accent">...</button>
+                        <button class="px-3 py-2 bg-muted text-muted-foreground rounded-md text-sm hover:bg-accent">15</button>
+                        <button class="px-3 py-2 bg-muted text-muted-foreground rounded-md text-sm hover:bg-accent">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </nav>
+                </div>
+            </section>
+        </div>
+        <!-- @END_COMPONENT: CategoryPage -->
+
+        <!-- @COMPONENT: AdminLogin -->
+        <div id="admin-login" class="page-content hidden">
+            <div class="min-h-screen bg-muted flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-md w-full space-y-8">
+                    <div class="text-center">
+                        <h1 class="text-3xl font-bold text-primary mb-2">NewsPortal</h1>
+                        <h2 class="text-2xl font-bold text-foreground mb-2">Admin Panel</h2>
+                        <p class="text-muted-foreground">Masuk ke dashboard admin untuk mengelola konten</p>
+                    </div>
+                    
+                    <div class="bg-card rounded-xl shadow-lg border border-border p-8">
+                        <form class="space-y-6" data-implementation="Should validate credentials and redirect to dashboard">
+                            <div>
+                                <label for="username" class="block text-sm font-medium text-card-foreground mb-2">Username</label>
+                                <input id="username" name="username" type="text" required 
+                                       class="w-full px-3 py-2 border border-border rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+                                       placeholder="Masukkan username" data-bind="loginForm.username">
+                            </div>
+                            
+                            <div>
+                                <label for="password" class="block text-sm font-medium text-card-foreground mb-2">Password</label>
+                                <div class="relative">
+                                    <input id="password" name="password" type="password" required 
+                                           class="w-full px-3 py-2 border border-border rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent pr-10"
+                                           placeholder="Masukkan password" data-bind="loginForm.password">
+                                    <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <input id="remember-me" name="remember-me" type="checkbox" 
+                                           class="h-4 w-4 text-primary border-border rounded focus:ring-ring">
+                                    <label for="remember-me" class="ml-2 block text-sm text-card-foreground">
+                                        Ingat saya
+                                    </label>
+                                </div>
+                                
+                                <button type="button" class="text-sm text-primary hover:underline">
+                                    Lupa password?
+                                </button>
+                            </div>
+                            
+                            <button type="submit" 
+                                    class="w-full bg-primary text-primary-foreground font-medium py-2 px-4 rounded-md hover:bg-secondary transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                                    data-event="click:handleLogin">
+                                Masuk
+                            </button>
+                        </form>
+                        
+                        <div class="mt-6 border-t border-border pt-6">
+                            <div class="bg-muted rounded-lg p-4">
+                                <h3 class="text-sm font-medium text-foreground mb-2">Demo Credentials:</h3>
+                                <div class="text-xs text-muted-foreground space-y-1">
+                                    <p><strong>Admin:</strong> admin / admin123</p>
+                                    <p><strong>Editor:</strong> editor / editor123</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: AdminLogin -->
+
+        <!-- @COMPONENT: AdminDashboard -->
+        <div id="admin-dashboard" class="page-content hidden">
+            <!-- Admin Sidebar -->
+            <!-- @COMPONENT: AdminSidebar -->
+            <div class="flex h-screen bg-muted">
+                <div class="w-64 bg-card shadow-lg border-r border-border">
+                    <div class="p-6 border-b border-border">
+                        <h1 class="text-xl font-bold text-primary">NewsPortal</h1>
+                        <p class="text-sm text-muted-foreground">Admin Dashboard</p>
+                    </div>
+                    
+                    <nav class="mt-6">
+                        <div class="px-4 space-y-2">
+                            <button onclick="showAdminSection('dashboard-overview')" 
+                                    class="w-full flex items-center px-4 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground" 
+                                    id="nav-dashboard-overview">
+                                <i class="fas fa-tachometer-alt mr-3"></i>
+                                Dashboard
+                            </button>
+                            <button onclick="showAdminSection('articles-management')" 
+                                    class="w-full flex items-center px-4 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-accent hover:text-accent-foreground" 
+                                    id="nav-articles-management">
+                                <i class="fas fa-newspaper mr-3"></i>
+                                Kelola Berita
+                            </button>
+                            <button onclick="showAdminSection('categories-management')" 
+                                    class="w-full flex items-center px-4 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-accent hover:text-accent-foreground" 
+                                    id="nav-categories-management">
+                                <i class="fas fa-tags mr-3"></i>
+                                Kategori
+                            </button>
+                            <button onclick="showAdminSection('users-management')" 
+                                    class="w-full flex items-center px-4 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-accent hover:text-accent-foreground" 
+                                    id="nav-users-management">
+                                <i class="fas fa-users mr-3"></i>
+                                Pengguna
+                            </button>
+                            <button onclick="showAdminSection('media-library')" 
+                                    class="w-full flex items-center px-4 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-accent hover:text-accent-foreground" 
+                                    id="nav-media-library">
+                                <i class="fas fa-images mr-3"></i>
+                                Media
+                            </button>
+                        </div>
+                        
+                        <div class="px-4 mt-8">
+                            <div class="border-t border-border pt-4">
+                                <button class="w-full flex items-center px-4 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-accent hover:text-accent-foreground">
+                                    <i class="fas fa-cog mr-3"></i>
+                                    Pengaturan
+                                </button>
+                                <button class="w-full flex items-center px-4 py-2 text-sm font-medium text-destructive rounded-md hover:bg-destructive/10">
+                                    <i class="fas fa-sign-out-alt mr-3"></i>
+                                    Keluar
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+                <!-- @END_COMPONENT: AdminSidebar -->
+
+                <!-- Main Content Area -->
+                <div class="flex-1 flex flex-col overflow-hidden">
+                    <!-- Top Header -->
+                    <!-- @COMPONENT: AdminHeader -->
+                    <header class="bg-card shadow-sm border-b border-border px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="text-xl font-semibold text-card-foreground" id="page-title">Dashboard</h2>
+                                <p class="text-sm text-muted-foreground">Selamat datang kembali, Admin</p>
+                            </div>
+                            
+                            <div class="flex items-center space-x-4">
+                                <button class="relative p-2 text-muted-foreground hover:text-foreground">
+                                    <i class="fas fa-bell"></i>
+                                    <span class="absolute top-0 right-0 h-2 w-2 bg-destructive rounded-full"></span>
+                                </button>
+                                
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-medium">
+                                        AD
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-sm font-medium" data-bind="currentUser.name">Admin User</p>
+                                        <p class="text-xs text-muted-foreground" data-bind="currentUser.role">Administrator</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    <!-- @END_COMPONENT: AdminHeader -->
+
+                    <!-- Dashboard Overview Content -->
+                    <!-- @COMPONENT: DashboardOverview -->
+                    <main class="flex-1 overflow-auto bg-background p-6" id="dashboard-overview">
+                        <!-- Stats Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                            <div class="bg-card rounded-xl border border-border p-6">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-muted-foreground">Total Berita</p>
+                                        <p class="text-2xl font-bold text-card-foreground" data-bind="stats.totalArticles">1,247</p>
+                                        <p class="text-sm text-green-600 mt-1">
+                                            <i class="fas fa-arrow-up mr-1"></i>
+                                            +12% dari bulan lalu
+                                        </p>
+                                    </div>
+                                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-newspaper text-blue-600"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-card rounded-xl border border-border p-6">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-muted-foreground">Berita Diterbitkan</p>
+                                        <p class="text-2xl font-bold text-card-foreground" data-bind="stats.publishedArticles">1,180</p>
+                                        <p class="text-sm text-green-600 mt-1">
+                                            <i class="fas fa-arrow-up mr-1"></i>
+                                            +8% dari bulan lalu
+                                        </p>
+                                    </div>
+                                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-check-circle text-green-600"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-card rounded-xl border border-border p-6">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-muted-foreground">Draft</p>
+                                        <p class="text-2xl font-bold text-card-foreground" data-bind="stats.draftArticles">67</p>
+                                        <p class="text-sm text-yellow-600 mt-1">
+                                            <i class="fas fa-arrow-up mr-1"></i>
+                                            +5 draft baru
+                                        </p>
+                                    </div>
+                                    <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-edit text-yellow-600"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-card rounded-xl border border-border p-6">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-muted-foreground">Total Pengguna</p>
+                                        <p class="text-2xl font-bold text-card-foreground" data-bind="stats.totalUsers">12</p>
+                                        <p class="text-sm text-blue-600 mt-1">
+                                            <i class="fas fa-arrow-up mr-1"></i>
+                                            +2 pengguna baru
+                                        </p>
+                                    </div>
+                                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                                        <i class="fas fa-users text-purple-600"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Articles & Quick Actions -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <!-- Recent Articles -->
+                            <div class="lg:col-span-2 bg-card rounded-xl border border-border p-6">
+                                <div class="flex items-center justify-between mb-6">
+                                    <h3 class="text-lg font-semibold text-card-foreground">Berita Terbaru</h3>
+                                    <button class="text-primary text-sm font-medium hover:underline">
+                                        Lihat Semua
+                                    </button>
+                                </div>
+                                
+                                <div class="space-y-4">
+                                    <!-- @MAP: recentArticles.map(article => ( -->
+                                    <div class="flex items-start space-x-4 p-4 bg-muted rounded-lg" data-mock="true">
+                                        <div class="w-16 h-16 bg-background rounded-lg overflow-hidden flex-shrink-0">
+                                            <!-- Small news article thumbnail -->
+                                            <img src="https://pixabay.com/get/g7df603a324d2c8c5d73e5da17d769f7c2e062a63e3c9b5a44bed77d8733f31a5dd7262bec6447987b3851cc3e44858bcb34abee9dfe57f2ce32a55b571d1d2d2_1280.jpg" 
+                                                 alt="Article thumbnail" 
+                                                 class="w-full h-full object-cover" />
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <h4 class="text-sm font-medium text-card-foreground line-clamp-2 mb-1" data-bind="article.title">
+                                                DPR Bahas RUU Baru Tentang Perlindungan Data Pribadi
+                                            </h4>
+                                            <div class="flex items-center space-x-2 text-xs text-muted-foreground">
+                                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded" data-bind="article.category">Politik</span>
+                                                <span data-bind="article.publishedAt">2 jam yang lalu</span>
+                                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded" data-bind="article.status">Diterbitkan</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <button class="text-muted-foreground hover:text-foreground p-1">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start space-x-4 p-4 bg-muted rounded-lg" data-mock="true">
+                                        <div class="w-16 h-16 bg-background rounded-lg overflow-hidden flex-shrink-0">
+                                            <!-- Small news article thumbnail -->
+                                            <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100" 
+                                                 alt="Article thumbnail" 
+                                                 class="w-full h-full object-cover" />
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <h4 class="text-sm font-medium text-card-foreground line-clamp-2 mb-1" data-bind="article.title">
+                                                Rupiah Menguat Terhadap Dollar AS di Awal Tahun 2024
+                                            </h4>
+                                            <div class="flex items-center space-x-2 text-xs text-muted-foreground">
+                                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded" data-bind="article.category">Ekonomi</span>
+                                                <span data-bind="article.publishedAt">5 jam yang lalu</span>
+                                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded" data-bind="article.status">Diterbitkan</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <button class="text-muted-foreground hover:text-foreground p-1">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start space-x-4 p-4 bg-muted rounded-lg" data-mock="true">
+                                        <div class="w-16 h-16 bg-background rounded-lg overflow-hidden flex-shrink-0">
+                                            <!-- Small news article thumbnail -->
+                                            <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100" 
+                                                 alt="Article thumbnail" 
+                                                 class="w-full h-full object-cover" />
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <h4 class="text-sm font-medium text-card-foreground line-clamp-2 mb-1" data-bind="article.title">
+                                                Startup Indonesia Raih Pendanaan Seri A $50 Juta
+                                            </h4>
+                                            <div class="flex items-center space-x-2 text-xs text-muted-foreground">
+                                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded" data-bind="article.category">Teknologi</span>
+                                                <span data-bind="article.publishedAt">1 hari yang lalu</span>
+                                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded" data-bind="article.status">Draft</span>
+                                            </div>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <button class="text-muted-foreground hover:text-foreground p-1">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- @END_MAP )) -->
+                                </div>
+                            </div>
+
+                            <!-- Quick Actions -->
+                            <div class="bg-card rounded-xl border border-border p-6">
+                                <h3 class="text-lg font-semibold text-card-foreground mb-6">Aksi Cepat</h3>
+                                
+                                <div class="space-y-3">
+                                    <button class="w-full flex items-center justify-between p-4 bg-primary text-primary-foreground rounded-lg hover:bg-secondary transition-colors">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fas fa-plus"></i>
+                                            <span class="font-medium">Buat Berita Baru</span>
+                                        </div>
+                                        <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                    
+                                    <button class="w-full flex items-center justify-between p-4 bg-muted text-muted-foreground rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fas fa-upload"></i>
+                                            <span class="font-medium">Upload Media</span>
+                                        </div>
+                                        <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                    
+                                    <button class="w-full flex items-center justify-between p-4 bg-muted text-muted-foreground rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fas fa-tag"></i>
+                                            <span class="font-medium">Tambah Kategori</span>
+                                        </div>
+                                        <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                    
+                                    <button class="w-full flex items-center justify-between p-4 bg-muted text-muted-foreground rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fas fa-user-plus"></i>
+                                            <span class="font-medium">Tambah Pengguna</span>
+                                        </div>
+                                        <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+
+                                <!-- System Status -->
+                                <div class="mt-8 pt-6 border-t border-border">
+                                    <h4 class="text-sm font-semibold text-card-foreground mb-4">Status Sistem</h4>
+                                    <div class="space-y-3">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-muted-foreground">Database</span>
+                                            <span class="text-sm text-green-600 flex items-center">
+                                                <i class="fas fa-circle text-xs mr-1"></i>
+                                                Online
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-muted-foreground">Storage</span>
+                                            <span class="text-sm text-green-600 flex items-center">
+                                                <i class="fas fa-circle text-xs mr-1"></i>
+                                                Normal
+                                            </span>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-muted-foreground">Backup</span>
+                                            <span class="text-sm text-yellow-600 flex items-center">
+                                                <i class="fas fa-circle text-xs mr-1"></i>
+                                                Running
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                    <!-- @END_COMPONENT: DashboardOverview -->
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: AdminDashboard -->
+
+        <!-- @COMPONENT: AdminArticlesManagement -->
+        <div id="admin-articles" class="page-content hidden">
+            <div class="flex h-screen bg-muted">
+                <!-- Sidebar (Same as Dashboard) -->
+                <div class="w-64 bg-card shadow-lg border-r border-border">
+                    <div class="p-6 border-b border-border">
+                        <h1 class="text-xl font-bold text-primary">NewsPortal</h1>
+                        <p class="text-sm text-muted-foreground">Admin Dashboard</p>
+                    </div>
+                    
+                    <nav class="mt-6">
+                        <div class="px-4 space-y-2">
+                            <button onclick="showAdminSection('dashboard-overview')" 
+                                    class="w-full flex items-center px-4 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-accent hover:text-accent-foreground">
+                                <i class="fas fa-tachometer-alt mr-3"></i>
+                                Dashboard
+                            </button>
+                            <button onclick="showAdminSection('articles-management')" 
+                                    class="w-full flex items-center px-4 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground">
+                                <i class="fas fa-newspaper mr-3"></i>
+                                Kelola Berita
+                            </button>
+                            <button onclick="showAdminSection('categories-management')" 
+                                    class="w-full flex items-center px-4 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-accent hover:text-accent-foreground">
+                                <i class="fas fa-tags mr-3"></i>
+                                Kategori
+                            </button>
+                            <button onclick="showAdminSection('users-management')" 
+                                    class="w-full flex items-center px-4 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-accent hover:text-accent-foreground">
+                                <i class="fas fa-users mr-3"></i>
+                                Pengguna
+                            </button>
+                            <button onclick="showAdminSection('media-library')" 
+                                    class="w-full flex items-center px-4 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-accent hover:text-accent-foreground">
+                                <i class="fas fa-images mr-3"></i>
+                                Media
+                            </button>
+                        </div>
+                        
+                        <div class="px-4 mt-8">
+                            <div class="border-t border-border pt-4">
+                                <button class="w-full flex items-center px-4 py-2 text-sm font-medium text-muted-foreground rounded-md hover:bg-accent hover:text-accent-foreground">
+                                    <i class="fas fa-cog mr-3"></i>
+                                    Pengaturan
+                                </button>
+                                <button class="w-full flex items-center px-4 py-2 text-sm font-medium text-destructive rounded-md hover:bg-destructive/10">
+                                    <i class="fas fa-sign-out-alt mr-3"></i>
+                                    Keluar
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="flex-1 flex flex-col overflow-hidden">
+                    <!-- Header -->
+                    <header class="bg-card shadow-sm border-b border-border px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="text-xl font-semibold text-card-foreground">Kelola Berita</h2>
+                                <p class="text-sm text-muted-foreground">Buat, edit, dan kelola semua berita</p>
+                            </div>
+                            
+                            <button class="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-secondary transition-colors flex items-center space-x-2"
+                                    data-event="click:createNewArticle">
+                                <i class="fas fa-plus"></i>
+                                <span>Buat Berita Baru</span>
+                            </button>
+                        </div>
+                    </header>
+
+                    <!-- Articles Management Content -->
+                    <main class="flex-1 overflow-auto bg-background p-6">
+                        <!-- Filters and Search -->
+                        <div class="bg-card rounded-xl border border-border p-6 mb-6">
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-card-foreground mb-2">Cari Berita</label>
+                                    <div class="relative">
+                                        <input type="text" placeholder="Cari judul, konten..." 
+                                               class="w-full pl-10 pr-4 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <i class="fas fa-search text-muted-foreground"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-card-foreground mb-2">Kategori</label>
+                                    <select class="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring">
+                                        <option value="">Semua Kategori</option>
+                                        <option value="politik">Politik</option>
+                                        <option value="ekonomi">Ekonomi</option>
+                                        <option value="teknologi">Teknologi</option>
+                                        <option value="olahraga">Olahraga</option>
+                                        <option value="budaya">Budaya</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-card-foreground mb-2">Status</label>
+                                    <select class="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring">
+                                        <option value="">Semua Status</option>
+                                        <option value="published">Diterbitkan</option>
+                                        <option value="draft">Draft</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-card-foreground mb-2">Urutkan</label>
+                                    <select class="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring">
+                                        <option value="newest">Terbaru</option>
+                                        <option value="oldest">Terlama</option>
+                                        <option value="title">Judul A-Z</option>
+                                        <option value="author">Penulis</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Articles Table -->
+                        <div class="bg-card rounded-xl border border-border overflow-hidden">
+                            <div class="p-6 border-b border-border">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-card-foreground">Daftar Berita</h3>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-sm text-muted-foreground">Menampilkan 10 dari 1,247 berita</span>
+                                        <div class="flex space-x-1">
+                                            <button class="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded">
+                                                <i class="fas fa-th-large"></i>
+                                            </button>
+                                            <button class="p-2 bg-primary text-primary-foreground rounded">
+                                                <i class="fas fa-list"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead class="bg-muted">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                                                <input type="checkbox" class="rounded border-border">
+                                            </th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Berita</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Kategori</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Penulis</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Tanggal</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-border" data-mock="true">
+                                        <!-- @MAP: articles.map(article => ( -->
+                                        <tr class="hover:bg-muted/50">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <input type="checkbox" class="rounded border-border">
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-start space-x-4">
+                                                    <div class="w-16 h-12 bg-background rounded overflow-hidden flex-shrink-0">
+                                                        <!-- Article thumbnail -->
+                                                        <img src="https://pixabay.com/get/g2e0468fd6bb3f466a5570e3c4c24f12fe588d8eab8a021d1f4f4a8a99d1be0e2da702f414128257692be661ba97dc1d48c5090418091a2e9fccce507c064ecac_1280.jpg" 
+                                                             alt="Article thumbnail" 
+                                                             class="w-full h-full object-cover" />
+                                                    </div>
+                                                    <div class="flex-1 min-w-0">
+                                                        <h4 class="text-sm font-medium text-card-foreground line-clamp-2 mb-1" data-bind="article.title">
+                                                            DPR Bahas RUU Baru Tentang Perlindungan Data Pribadi
+                                                        </h4>
+                                                        <p class="text-xs text-muted-foreground" data-bind="article.slug">dpr-bahas-ruu-baru-tentang-perlindungan-data-pribadi</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800" data-bind="article.category">
+                                                    Politik
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-card-foreground" data-bind="article.author">
+                                                John Doe
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800" data-bind="article.status">
+                                                    Diterbitkan
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground" data-bind="article.createdAt">
+                                                15 Jan 2024
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <div class="flex space-x-2">
+                                                    <button class="text-primary hover:text-secondary" title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="text-blue-600 hover:text-blue-800" title="Preview">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="text-destructive hover:text-destructive/80" title="Hapus">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="hover:bg-muted/50">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <input type="checkbox" class="rounded border-border">
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-start space-x-4">
+                                                    <div class="w-16 h-12 bg-background rounded overflow-hidden flex-shrink-0">
+                                                        <!-- Article thumbnail -->
+                                                        <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=80" 
+                                                             alt="Article thumbnail" 
+                                                             class="w-full h-full object-cover" />
+                                                    </div>
+                                                    <div class="flex-1 min-w-0">
+                                                        <h4 class="text-sm font-medium text-card-foreground line-clamp-2 mb-1" data-bind="article.title">
+                                                            Rupiah Menguat Terhadap Dollar AS di Awal Tahun 2024
+                                                        </h4>
+                                                        <p class="text-xs text-muted-foreground" data-bind="article.slug">rupiah-menguat-terhadap-dollar-as-di-awal-tahun-2024</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800" data-bind="article.category">
+                                                    Ekonomi
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-card-foreground" data-bind="article.author">
+                                                Jane Smith
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800" data-bind="article.status">
+                                                    Diterbitkan
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground" data-bind="article.createdAt">
+                                                14 Jan 2024
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <div class="flex space-x-2">
+                                                    <button class="text-primary hover:text-secondary" title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="text-blue-600 hover:text-blue-800" title="Preview">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="text-destructive hover:text-destructive/80" title="Hapus">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="hover:bg-muted/50">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <input type="checkbox" class="rounded border-border">
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <div class="flex items-start space-x-4">
+                                                    <div class="w-16 h-12 bg-background rounded overflow-hidden flex-shrink-0">
+                                                        <!-- Article thumbnail -->
+                                                        <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=80" 
+                                                             alt="Article thumbnail" 
+                                                             class="w-full h-full object-cover" />
+                                                    </div>
+                                                    <div class="flex-1 min-w-0">
+                                                        <h4 class="text-sm font-medium text-card-foreground line-clamp-2 mb-1" data-bind="article.title">
+                                                            Startup Indonesia Raih Pendanaan Seri A $50 Juta
+                                                        </h4>
+                                                        <p class="text-xs text-muted-foreground" data-bind="article.slug">startup-indonesia-raih-pendanaan-seri-a-50-juta</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800" data-bind="article.category">
+                                                    Teknologi
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-card-foreground" data-bind="article.author">
+                                                John Doe
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800" data-bind="article.status">
+                                                    Draft
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground" data-bind="article.createdAt">
+                                                13 Jan 2024
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <div class="flex space-x-2">
+                                                    <button class="text-primary hover:text-secondary" title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="text-blue-600 hover:text-blue-800" title="Preview">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="text-destructive hover:text-destructive/80" title="Hapus">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <!-- @END_MAP )) -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Pagination -->
+                            <div class="bg-muted px-6 py-3 flex items-center justify-between border-t border-border">
+                                <div class="flex-1 flex justify-between sm:hidden">
+                                    <button class="relative inline-flex items-center px-4 py-2 border border-border text-sm font-medium rounded-md text-muted-foreground bg-background hover:bg-accent">
+                                        Sebelumnya
+                                    </button>
+                                    <button class="ml-3 relative inline-flex items-center px-4 py-2 border border-border text-sm font-medium rounded-md text-muted-foreground bg-background hover:bg-accent">
+                                        Selanjutnya
+                                    </button>
+                                </div>
+                                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                                    <div>
+                                        <p class="text-sm text-muted-foreground">
+                                            Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium">10</span> dari{' '}
+                                            <span class="font-medium">1,247</span> hasil
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                                            <button class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-border bg-background text-sm font-medium text-muted-foreground hover:bg-accent">
+                                                <i class="fas fa-chevron-left"></i>
+                                            </button>
+                                            <button class="bg-primary border-primary text-primary-foreground relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                                1
+                                            </button>
+                                            <button class="bg-background border-border text-muted-foreground hover:bg-accent relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                                2
+                                            </button>
+                                            <button class="bg-background border-border text-muted-foreground hover:bg-accent relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                                3
+                                            </button>
+                                            <button class="bg-background border-border text-muted-foreground hover:bg-accent relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                                ...
+                                            </button>
+                                            <button class="bg-background border-border text-muted-foreground hover:bg-accent relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                                125
+                                            </button>
+                                            <button class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-border bg-background text-sm font-medium text-muted-foreground hover:bg-accent">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </button>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: AdminArticlesManagement -->
+    </div>
+
+    <!-- JavaScript for Page Navigation -->
+    <script>
+        (function() {
+            // Page navigation functionality
+            function showPage(pageId) {
+                // Hide all pages
+                const pages = document.querySelectorAll('.page-content');
+                pages.forEach(page => page.classList.add('hidden'));
+
+                // Show selected page
+                const selectedPage = document.getElementById(pageId);
+                if (selectedPage) {
+                    selectedPage.classList.remove('hidden');
+                }
+
+                // Update tab styles
+                const tabs = document.querySelectorAll('[id^="tab-"]');
+                tabs.forEach(tab => {
+                    tab.classList.remove('bg-primary');
+                    tab.classList.add('bg-gray-700', 'hover:bg-gray-600');
+                });
+
+                const activeTab = document.getElementById(`tab-${pageId}`);
+                if (activeTab) {
+                    activeTab.classList.add('bg-primary');
+                    activeTab.classList.remove('bg-gray-700', 'hover:bg-gray-600');
+                }
+            }
+
+            function showAdminSection(sectionId) {
+                // Hide all admin sections
+                const sections = document.querySelectorAll('[id$="-overview"], [id$="-management"]');
+                sections.forEach(section => section.classList.add('hidden'));
+
+                // Show selected section
+                const selectedSection = document.getElementById(sectionId);
+                if (selectedSection) {
+                    selectedSection.classList.remove('hidden');
+                }
+
+                // Update navigation styles
+                const navItems = document.querySelectorAll('[id^="nav-"]');
+                navItems.forEach(item => {
+                    item.classList.remove('bg-primary', 'text-primary-foreground');
+                    item.classList.add('text-muted-foreground', 'hover:bg-accent', 'hover:text-accent-foreground');
+                });
+
+                const activeNav = document.getElementById(`nav-${sectionId}`);
+                if (activeNav) {
+                    activeNav.classList.add('bg-primary', 'text-primary-foreground');
+                    activeNav.classList.remove('text-muted-foreground', 'hover:bg-accent', 'hover:text-accent-foreground');
+                }
+
+                // Update page title
+                const pageTitle = document.getElementById('page-title');
+                if (pageTitle) {
+                    const titles = {
+                        'dashboard-overview': 'Dashboard',
+                        'articles-management': 'Kelola Berita',
+                        'categories-management': 'Kategori',
+                        'users-management': 'Pengguna',
+                        'media-library': 'Media'
+                    };
+                    pageTitle.textContent = titles[sectionId] || 'Dashboard';
+                }
+            }
+
+            // Make functions global
+            window.showPage = showPage;
+            window.showAdminSection = showAdminSection;
+
+            // Show homepage by default
+            showPage('homepage');
+        })();
+    </script>
+</body>
+</html>
