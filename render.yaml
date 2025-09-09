@@ -9,7 +9,6 @@ services:
     branch: main
     plan: free
     buildCommand: npm ci && npm run build
-    preDeployCommand: npm run migrate || true
     startCommand: npm run start
     envVars:
       - key: NODE_ENV
