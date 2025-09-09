@@ -1,0 +1,37 @@
+# render.yaml — blueprint untuk Render
+# Defines: frontend (static), backend (node web service), and a Postgres DB.
+
+services:
+  # Backend: Express + Node
+  - type: web
+    name: genzid-backend
+    runtime: node
+    branch: main
+    plan: free
+    buildCommand: npm ci && npm run build
+    preDeployCommand: npm run migrate || true
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: genzid-postgres
+          property: connectionString
+
+  # Frontend: static site (Vite build output inside client/dist)
+  - type: web
+    name: genzid-frontend
+    runtime: static
+    branch: main
+    plan: free
+    buildCommand: cd client && npm ci && npm run build
+    staticPublishPath: client/dist
+    previews:
+      generation: automatic
+
+databases:
+  - name: genzid-postgres
+    plan: free
+    databaseName: genzid_db
+    user: genzid_user
